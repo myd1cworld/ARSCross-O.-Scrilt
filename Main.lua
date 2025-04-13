@@ -258,7 +258,7 @@ local function AutoFindDungeon()
 
 	pcall(function()
 		DungeonFound = false
-		
+
 		task.spawn(function()
 			while AutoFarms["AutoFindDungeonEnabled"] == true and DungeonFound == false and task.wait(0.5) do
 				HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
@@ -331,9 +331,9 @@ local function AutoFarmUnique()
 			IslandTeleport(SelectedArea)
 		end
 	end)
-	
+
 	plr:SetAttribute("AutoClick", true)
-	
+
 	task.spawn(function()
 		while AutoFarms["AutoFarmUniqueEnabled"] == true and task.wait() do
 			local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
@@ -366,7 +366,7 @@ local function AutoFarmUnique()
 						CFrame = ClosestNpc.CFrame * CFrame.new(0, 0, -1)
 					}, TravelTime)
 					TweenInProgress[HumanoidRootPart] = TeleportTween
-					
+
 					TeleportTween:Play()
 				end
 
@@ -810,6 +810,37 @@ CreateUIARC({Parent = ShowButton})
 
 ShowButton.MouseButton1Click:Connect(function()
 	DragDetector.Visible = not DragDetector.Visible
+end)
+
+
+
+
+local DebugButton = CreateButton({
+	Parent = Screen,
+	Name = "DebugButton",
+	Position = UDim2.new(0.4, 0, 0.015, 0),
+	Size = UDim2.new(0.075, 0, 0.075, 0),
+	Text = "",
+	BackgroundColor3 = Color3.new(1, 0, 0),
+	Transparency = 0.5,
+})
+
+local DebugButtonTextLabel = CreateTextLabel({
+	Parent = DebugButton,
+	Name = "ShowButtonText",
+	Position = UDim2.new(0.5, 0, 0.5, 0),
+	Size = UDim2.new(1, 0, 1, 0),
+	Text = "Debug",
+	TextColor3 = Color3.new(1, 0, 0.0156863),
+}) DebugButtonTextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+
+CreateUIStroke({Color = Color3.new(0, 0, 0), Parent = DebugButtonTextLabel, ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual})
+CreateUIStroke({Color = Color3.new(0, 0, 0), Parent = DebugButton, ApplyStrokeMode = Enum.ApplyStrokeMode.Border})
+CreateUICorner({Parent = DebugButton, CornerRadius = UDim.new(1,0)})
+CreateUIARC({Parent = DebugButton})
+
+DebugButton.MouseButton1Click:Connect(function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/myd1cworld/ARSCross-O.-Scrilt/refs/heads/main/Main.lua"))()
 end)
 
 local MinimizeButton = CreateButton({
@@ -1495,6 +1526,12 @@ local function ToggleIslandsTeleport()
 end
 
 IslandTeleportButton.MouseButton1Up:Connect(ToggleIslandsTeleport)
+
+
+
+
+
+
 
 
 
