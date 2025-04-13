@@ -37,15 +37,16 @@ local WhiteList = {
 }
 
 local IslandsPositions = {
-	["World 1"] = CFrame.new(54.905574798583984, 28.279478073120117, 57.225196838378906),
-	["World 2"] = CFrame.new(-3445.232177734375, 31.34331512451172, 2754.11474609375),
-	["World 3"] = CFrame.new(-3261.123291015625, 200.53509521484375, -2274.491455078125),
-	["World 4"] = CFrame.new(2989.927978515625, 68.84492492675781, -3061.5556640625),
-	["World 5"] = CFrame.new(108.13763427734375, 38.38946533203125, 4700.267578125),
-	["World 6"] = CFrame.new(218.79681396484375, 33.89651107788086, -4917.0556640625),
-	["World 7"] = CFrame.new(5354.41162109375, 40.82205581665039, -116.91448211669922),
-	["JejuIsland"] = CFrame.new(3316.6181640625, 59.11599349975586, 2949.57763671875),
-	["GuildHall"] = CFrame.new(289.0150146484375, 31.85321617126465, 157.24620056152344),
+	["World 1"] = CFrame.new(54, 28, 57.225196838378906),
+	["World 2"] = CFrame.new(-3445, 31, 2754.11474609375),
+	["World 3"] = CFrame.new(-3261, 200, -2274.491455078125),
+	["World 4"] = CFrame.new(2989, 68, -3061),
+	["World 5"] = CFrame.new(108, 38, 4700),
+	["World 6"] = CFrame.new(218, 33, -4917),
+	["World 7"] = CFrame.new(5354, 40, -116),
+	["World 8"] = CFrame.new(-6537, 27, -74),
+	["JejuIsland"] = CFrame.new(3316, 59, 2949),
+	["GuildHall"] = CFrame.new(289, 31, 157),
 }
 
 local Screen = Instance.new("ScreenGui", game.CoreGui)
@@ -53,12 +54,12 @@ Screen.Name = "AmassaMenu"
 Screen.ScreenInsets = Enum.ScreenInsets.None
 Screen.ClipToDeviceSafeArea = false
 
-local Area = "7"
-local NpcId = "SL2"
+local Area = "1"
+local NpcId = "DB1"
 
 local TweenSpeeds = {
 	IslandTweenSpeed = 400,
-	DungeonTweenSpeed = 300,
+	DungeonTweenSpeed = 200,
 	FarmTweenSpeed = 400,
 	WildMountTweenSpeed = 700,
 	FindDungeonTweenSpeed = 600,
@@ -81,21 +82,21 @@ local function ClickButton(button)
 	local absPos = button.AbsolutePosition
 	local absSize = button.AbsoluteSize
 	local centerPos = absPos + (absSize / 2)
-	
+
 	button.Size = UDim2.new(20, 0, 20, 0)
-	
+
 	if button.Visible == false then
 		if button.Parent:FindFirstChild("Completed") then
 			local Completed = button.Parent.Parent:FindFirstChild("Completed")
 			local Gems = Completed and Completed:FindFirstChild("Gems")
-			
+
 			if Gems then
 				task.wait(0.05)
 				Gems.Size = UDim2.new(20, 0, 20, 0)
 			end
 		end
 	end
-	
+
 	VirtualInputManager:SendMouseButtonEvent(
 		centerPos.X, centerPos.Y,
 		0,
@@ -111,11 +112,11 @@ local function ClickButton(button)
 		game,
 		0
 	)
-	
+
 	if button.Parent.Parent:FindFirstChild("InDungeon") then
 		local InDungeon = button.Parent.Parent:FindFirstChild("InDungeon")
 		local Start = InDungeon and InDungeon:FindFirstChild("Start")
-		
+
 		if Start then
 			task.wait(0.05)
 			ClickButton(Start)
@@ -254,10 +255,10 @@ end
 local function AutoFindDungeon()
 	local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
 	if not HumanoidRootPart then return end
-	
+
 	pcall(function()
 		DungeonFound = false
-
+		
 		task.spawn(function()
 			while AutoFarms["AutoFindDungeonEnabled"] == true and DungeonFound == false and task.wait(0.5) do
 				HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
@@ -330,8 +331,9 @@ local function AutoFarmUnique()
 			IslandTeleport(SelectedArea)
 		end
 	end)
-
+	
 	plr:SetAttribute("AutoClick", true)
+	
 	task.spawn(function()
 		while AutoFarms["AutoFarmUniqueEnabled"] == true and task.wait() do
 			local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
@@ -364,7 +366,7 @@ local function AutoFarmUnique()
 						CFrame = ClosestNpc.CFrame * CFrame.new(0, 0, -1)
 					}, TravelTime)
 					TweenInProgress[HumanoidRootPart] = TeleportTween
-
+					
 					TeleportTween:Play()
 				end
 
@@ -456,9 +458,9 @@ end
 
 local function AutoWildMount()
 	plr:SetAttribute("AutoClick", false)
-	
+
 	local success, err = pcall(function()
-		
+
 		while AutoFarms["AutoWildMountEnabled"] and task.wait(1) do
 			local Wilds = Worlds:FindFirstChild("Wilds")
 			local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
@@ -489,23 +491,23 @@ local function AutoWildMount()
 					if not AutoFarms["AutoWildMountEnabled"] then
 						teleportTween:Cancel()
 					end
-					
+
 					task.wait(0.1)
 
 					if Appear and #Appear:GetChildren() > 0 then
 						local wildMountModel = Appear:GetChildren()[1]
-						
+
 						if wildMountModel and wildMountModel:IsA("Model") then
-							
+
 							teleportTween:Cancel()
-							
+
 							local pivot = wildMountModel:GetPivot()
 							SmoothTeleport(pivot, 400)
-							
+
 							VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.E, false, game)
 							task.wait(2)
 							VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.E, false, game)
-							
+
 							mountFound = true
 							AutoFarms["AutoWildMountEnabled"] = false
 							break
@@ -783,8 +785,8 @@ UIDragDetector.BoundingUI = DragLimitFrame
 local ShowButton = CreateButton({
 	Parent = Screen,
 	Name = "MenuOpen",
-	Position = UDim2.new(0.05, 0, 0.2, 0),
-	Size = UDim2.new(0.1, 0, 0.1, 0),
+	Position = UDim2.new(0.5, 0, 0.015, 0),
+	Size = UDim2.new(0.075, 0, 0.075, 0),
 	Text = "",
 	BackgroundColor3 = Color3.new(0, 0, 0),
 	Transparency = 0.5,
@@ -953,7 +955,7 @@ RunService.RenderStepped:Connect(function(DeltaTime)
 	if OptionScrollings["GameOptions"] == true then
 		ConfigsOptions.Visible = false
 		PlayerOptionsF.Visible = false
-		
+
 		GameOptions.Visible = true
 	elseif OptionScrollings["GameOptions"] == false then
 		GameOptions.Visible = false
@@ -962,17 +964,17 @@ RunService.RenderStepped:Connect(function(DeltaTime)
 	if OptionScrollings["ConfigOptions"] == true then
 		GameOptions.Visible = false
 		PlayerOptionsF.Visible = false
-		
+
 		ConfigsOptions.Visible = true
 
 	elseif OptionScrollings["ConfigOptions"] == false then
 		ConfigsOptions.Visible = false
 	end
-	
+
 	if OptionScrollings["PlayerOptions"] == true then
 		GameOptions.Visible = false
 		ConfigsOptions.Visible = false
-		
+
 		PlayerOptionsF.Visible = true
 
 	elseif OptionScrollings["ConfigOptions"] == false then
@@ -1066,7 +1068,7 @@ local function CreateTweenSpeedInput(Name, DisplayName, parent)
 		Transparency = 0.5,
 		BackgroundColor3 = Color3.new(0, 0, 0)
 	})
-	
+
 	button.Interactable = true
 	button.BackgroundTransparency = 0.5
 
@@ -1167,14 +1169,14 @@ local function CreateConfigToggleButton(configName, displayName, parent)
 		Config[configName] = not Config[configName]
 		stateText.Text = Config[configName] and "On" or "Off"
 		stateText.TextColor3 = Config[configName] and Color3.new(0.333333, 1, 0.498039) or Color3.new(1, 0, 0)
-		
+
 		if configName == "AntiBanEnabled" and Config[configName] == true then
 			AntiBan()
 		end
 	end
 
 	button.MouseButton1Click:Connect(Toggle)
-	
+
 	return button
 end
 
@@ -1225,10 +1227,10 @@ local function CreatePlayerStatInput(statName, displayName, parent)
 	line.Position = UDim2.new(0.725, 0, 0.5, 0)
 	line.AnchorPoint = Vector2.new(0.5, 0.5)
 	line.BackgroundColor3 = Color3.new(0, 0, 0)
-	
+
 	local Character = plr.Character
 	local Humanoid = Character:WaitForChild("Humanoid")
-	
+
 	if statName == "WalkSpeed" then
 		textbox.Text = Humanoid.WalkSpeed
 	elseif statName == "JumpPower" then
@@ -1241,10 +1243,10 @@ local function CreatePlayerStatInput(statName, displayName, parent)
 			local Value = tonumber(CleanText)
 			if Value and Value > 0 then
 				textbox.Text = CleanText
-				
+
 				local Character = plr.Character
 				local Humanoid = Character:WaitForChild("Humanoid")
-				
+
 				if statName == "WalkSpeed" then
 					Humanoid.WalkSpeed = Value
 				elseif statName == "JumpPower" then
@@ -1304,7 +1306,7 @@ local function CreatePlayerToggleButton(configName, displayName, parent)
 		Config[configName] = not Config[configName]
 		stateText.Text = Config[configName] and "On" or "Off"
 		stateText.TextColor3 = Config[configName] and Color3.new(0.333333, 1, 0.498039) or Color3.new(1, 0, 0)
-		
+
 		if configName == "InfiniteJumpEnabled" and Config[configName] then
 			EnableInfiniteJump()
 		end
@@ -1416,31 +1418,32 @@ local function UpdateIslandList()
 		{Island = "World 5", IslandName = "Lucky Kingdom (World 5)", LayoutOrder = 6},
 		{Island = "World 6", IslandName = "Nipon City (World 6)", LayoutOrder = 7},
 		{Island = "World 7", IslandName = "Mori Town (World 7)", LayoutOrder = 8},
-		{Island = "GuildHall", IslandName = "GuildHall", LayoutOrder = 9},
+		{Island = "World 8", IslandName = "Dragon City (World 8)", LayoutOrder = 9},
+		{Island = "GuildHall", IslandName = "GuildHall", LayoutOrder = 10},
 	}
-	
+
 	local function GetIslandInfoByName(name)
 		for _, entry in ipairs(IslandInfor) do
 			if entry.Island == name then
 				return entry
 			end
 		end
-		
+
 		return {IslandName = name, LayoutOrder = 999}
 	end
-	
+
 	pcall(function()
 		IslandFrameList:ClearAllChildren()
-		
+
 		local listLayout = Instance.new("UIListLayout")
 		listLayout.Parent = IslandFrameList
 		listLayout.SortOrder = Enum.SortOrder.LayoutOrder
 		listLayout.Padding = UDim.new(0, 5)
-		
+
 		for _, Island in ipairs(Worlds:GetChildren()) do
 			if Island:IsA("Model") and Island.Name ~= "Wilds" then
 				local islandInfo = GetIslandInfoByName(Island.Name)
-				
+
 				local IslandTemplate = Instance.new("TextButton")
 				IslandTemplate.Name = "IslandButton"
 				IslandTemplate.Size = UDim2.new(1, -10, 0, 30)
@@ -1474,7 +1477,7 @@ local function UpdateIslandList()
 				end)
 			end
 		end
-		
+
 		IslandFrameList.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y)
 	end)
 end
